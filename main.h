@@ -42,7 +42,6 @@
 #include <avr/io.h>
 #include <util/delay.h>
 #include <stdint.h>
-#include <string.h>
 #include "sensors.h"
 #include "adc_lib/adc.h"
 #include "lcd_lib/lcd.h"
@@ -58,6 +57,7 @@
 /* Global constants */
 #define SAMPLES 10
 #define DELAY 100
+#define DIGIT_POSITION 14
 
 /* Global variables */
 
