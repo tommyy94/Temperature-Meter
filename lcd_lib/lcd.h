@@ -55,11 +55,13 @@
 #define CLEAR_DISPLAY 0x01
 #define SET_4_BIT 0x28
 #define SET_8_BIT 0x38
-#define DISPLAY_ON_CURSON_OFF 0x0C
-#define DISPLAY_ON_CURSON_ON 0x0E
-#define DISPLAY_ON_CURSON_BLINK 0x0F
+#define DISPLAY_ON_CURSOR_OFF 0x0C
+#define DISPLAY_ON_CURSOR_ON 0x0E
+#define DISPLAY_ON_CURSOR_BLINK 0x0F
 #define FIRST_LINE 0x80
 #define SECOND_LINE 0xC0
+
+#define NOP asm volatile("nop")
 
 /* Global variables */
 
@@ -68,13 +70,9 @@
 /****************************************************************************
 *   FUNCTION PROTOTYPES
 ****************************************************************************/
-void lcd_check_if_busy(void);
-void lcd_keep_enabled(void);
-void lcd_send_command(unsigned char command);
-void lcd_goto_xy(uint8_t x, uint8_t y);
-void lcd_send_character(unsigned char character);
+void lcd_send_character(char character);
 void lcd_send_string(uint8_t x, uint8_t y, char *string);
-void lcd_send_int(uint8_t x, uint8_t y, int int_to_display, unsigned char number_of_digits);
+void lcd_send_int(uint8_t x, uint8_t y, uint32_t int_to_display);
 void lcd_init(void);
 
 #endif /* LCD_H_ */
