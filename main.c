@@ -15,7 +15,7 @@
 *   You should have received a copy of the GNU General Public License
 *   along with LCD_library. If not, see <http://www.gnu.org/licenses/>.
 *
-*	Copyright (C) 2017 by tommyy94
+*   Copyright (C) 2017 by tommyy94
 *
 ***************************************************************************/
 
@@ -47,12 +47,12 @@ int main(void)
 	while(1)
 	{
 		Temp.celsius = sensor_read(Temp, TEMP_SENSOR)/2;
-		Temp.fahrenheit = Temp.celsius * (9/5) + 32;
+		Temp.fahrenheit = (Temp.celsius * (9*10)/5)/10 + 32;
 
 		lcd_send_string(0, 0, "Celsius: ");
-		lcd_send_int(strlen("Celsius: "), 0, Temp.celsius, 2);
+		lcd_send_int(DIGIT_POSITION, 0, Temp.celsius);
 		lcd_send_string(0, 1, "Fahrenheit: ");
-		lcd_send_int(strlen("Fahrenheit: "), 1, Temp.fahrenheit, 2);
+		lcd_send_int(DIGIT_POSITION, 1, Temp.fahrenheit);
 
 		_delay_ms(DELAY);
 	}
