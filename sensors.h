@@ -51,23 +51,20 @@
 
 /* Global constants */
 #define SAMPLES 10
-//#ifdef TEMP_SENSOR
-//sensor_read(Temp, TEMP_SENSOR)*5/10
-//#define TEMP_FORMULA sensor_read(Temp, TEMP_SENSOR)/2
-//#endif
 
 /* Global variables */
 
 /* Global structures */
-struct Sensors{
-	uint16_t celsius;
-	uint16_t fahrenheit;
-	uint16_t value;
+struct Sensors
+{
+	uint8_t celsius;
+	uint8_t fahrenheit;
+	uint8_t value; /* change to an array */
 };
 
 /****************************************************************************
 *   FUNCTION PROTOTYPES
 ****************************************************************************/
-uint16_t sensor_read(struct Sensors, uint8_t sensor_type);
+uint8_t sensor_read(struct Sensors, uint8_t sensor_type);
 
 #endif /* SENSORS_H_ */
