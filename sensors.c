@@ -34,22 +34,28 @@
 ***************************************************************************/
 #include "sensors.h"
 
+/****************************************************************************
+*   FUNCTION PROTOTYPES
+****************************************************************************/
+
 /***************************************************************************
 ;	F U N C T I O N    D E S C R I P T I O N
 ;---------------------------------------------------------------------------
 ; NAME: sensor_read
 ; DESCRIPTION:
-;	Input: whole struct, sensors type
-;	Output: Current temperature value
-;	Used global variables:
-; REMARKS when using this function: sensor_type's: TEMP_SENSOR
+; Input: struct Sensors, sensors type
+; Output: Current temperature value
+; Used global variables: -
+; REMARKS when using this function: sensor_types: TEMP_SENSOR
 ;**************************************************************************/
-uint16_t sensor_read(struct Sensors Object, uint8_t sensor_type)
+uint8_t sensor_read(struct Sensors Object, uint8_t sensor_type)
 {
 	switch(sensor_type)
 	{
 		case TEMP_SENSOR:
 			Object.value = adc_read();
+			break;
+		default:
 			break;
 	}
 	return Object.value;
