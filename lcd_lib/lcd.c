@@ -169,7 +169,6 @@ void lcd_send_int(const uint8_t x, const uint8_t y, int8_t *int_to_display)
 *   FUNCTION: lcd_init                                                        *
 ***************************************************************************//**
 @brief Sets 4/8-bit mode and control lines to desirable port.
-@details
 ******************************************************************************/
 void lcd_init(void)
 {
