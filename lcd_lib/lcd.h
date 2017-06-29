@@ -68,20 +68,33 @@
 #define FIRST_LINE 0x80
 #define SECOND_LINE 0xC0
 
+<<<<<<< HEAD
 #ifndef NOP
 #define NOP asm volatile("nop")
 #endif
+=======
+#define NOP asm volatile("nop")
+>>>>>>> master
 
 /* Global variables */
 
 /* Global structures */
 
+<<<<<<< HEAD
 /******************************************************************************
 *   FUNCTION PROTOTYPES                                                       *
 ******************************************************************************/
 void lcd_send_character(const char character);
 void lcd_send_string(const uint8_t x, const uint8_t y, char *string);
 void lcd_send_int(const uint8_t x, const uint8_t y, int8_t *int_to_display);
+=======
+/****************************************************************************
+*   FUNCTION PROTOTYPES
+****************************************************************************/
+void lcd_send_character(char character);
+void lcd_send_string(uint8_t x, uint8_t y, char *string);
+void lcd_send_int(uint8_t x, uint8_t y, uint32_t int_to_display);
+>>>>>>> master
 void lcd_init(void);
 
 #endif /* LCD_H_ */
