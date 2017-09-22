@@ -1,25 +1,4 @@
 /******************************************************************************
-*                                                                             *
-*   This file is part of TemperatureMeter.                                    *
-*                                                                             *
-*   TemperatureMeter is free software: you can redistribute it and/or         *
-*   modify it under the terms of the GNU General Public License as            *
-*   published by the Free Software Foundation, either version 3 of the        *
-*   License, or (at your option) any later version.                           *
-*                                                                             *
-*   TemperatureMeter is distributed in the hope that it will be useful,       *
-*   but WITHOUT ANY WARRANTY; without even the implied warranty of            *
-*   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the             *
-*   GNU General Public License for more details.                              *
-*                                                                             *
-*   You should have received a copy of the GNU General Public License along   *
-*   with TemperatureMeter If not, see <http://www.gnu.org/licenses/>.         *
-*                                                                             *
-*   Copyright (C) 2017 by tommyy94                                            *
-*                                                                             *
-******************************************************************************/
-
-/******************************************************************************
 *
 * 1. NAME
 *       adc.c
@@ -57,7 +36,6 @@ void adc_init(void)
      * Input clock to the ADC:
      * 16MHz/8 = 125kHz
      */
-    return;
 }
 
 /******************************************************************************
@@ -69,12 +47,11 @@ be called.
 @param Analog input pin
 @return 10-bit ADC value
 ******************************************************************************/
-uint8_t adc_read(const uint8_t analog_channel)
+int32_t adc_read(const uint8_t analog_channel)
 {
     ADMUX |= analog_channel;
     ADCSRA |= (1 << ADSC); /* starts ADC conversion */
-    while(ADCSRA & (1 << ADSC))
-    {
+    while(ADCSRA & (1 << ADSC)) {
         ; /* wait until conversion is done */
     }
     return ADC;
