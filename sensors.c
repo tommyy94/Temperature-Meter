@@ -1,25 +1,4 @@
 /******************************************************************************
-*                                                                             *
-*   This file is part of TemperatureMeter.                                    *
-*                                                                             *
-*   TemperatureMeter is free software: you can redistribute it and/or         *
-*   modify it under the terms of the GNU General Public License as            *
-*   published by the Free Software Foundation, either version 3 of the        *
-*   License, or (at your option) any later version.                           *
-*                                                                             *
-*   TemperatureMeter is distributed in the hope that it will be useful,       *
-*   but WITHOUT ANY WARRANTY; without even the implied warranty of            *
-*   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the             *
-*   GNU General Public License for more details.                              *
-*                                                                             *
-*   You should have received a copy of the GNU General Public License along   *
-*   with TemperatureMeter If not, see <http://www.gnu.org/licenses/>.         *
-*                                                                             *
-*   Copyright (C) 2017 by tommyy94                                            *
-*                                                                             *
-******************************************************************************/
-
-/******************************************************************************
 *
 * 1. NAME
 *       sensor.c
@@ -32,7 +11,7 @@
 /******************************************************************************
 *   HEADER FILES                                                              *
 ******************************************************************************/
-#include "sensor.h"
+#include "sensors.h"
 
 /******************************************************************************
 *   FUNCTION PROTOTYPES                                                       *
@@ -46,10 +25,18 @@
 ******************************************************************************/
 void sensor_read(struct sensor *temperature)
 {
-    temperature->celsius = ((adc_read(PINC0) * 5 / 1024.0) - 0.5) * 100;
-    temperature->fahrenheit = temperature->celsius * 9 / 5 + 32;
-    /**
-     * @todo figure way to add decimal without floating point
-     */
-    return;
+    int32_t celsius, fahrenheit;
+    const char decimal_mark[] = ".";
+    
+    celsius = ((adc_read(PINC0) * 5000) / 1024) - 500;
+    itoa(celsius, temperature->celsius, DECIMAL_SYSTEM);
+    /* move last digit to right by one and place decimal mark in empty place */
+    *(temperature->celsius+3) = *(temperature->celsius+2);
+    *(temperature->celsius+2) = *decimal_mark;
+    
+    fahrenheit = (celsius * 9 / 5) + 320;
+    itoa(fahrenheit, temperature->fahrenheit, DECIMAL_SYSTEM);
+    /* again shifting a digit and placing a decimal mark */
+    *(temperature->fahrenheit+3) = *(temperature->fahrenheit+2);
+    *(temperature->fahrenheit+2) = *decimal_mark;
 }
