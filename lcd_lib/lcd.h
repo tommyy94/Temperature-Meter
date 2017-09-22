@@ -1,25 +1,4 @@
 /******************************************************************************
-*                                                                             *
-*   This file is part of TemperatureMeter.                                    *
-*                                                                             *
-*   TemperatureMeter is free software: you can redistribute it and/or         *
-*   modify it under the terms of the GNU General Public License as            *
-*   published by the Free Software Foundation, either version 3 of the        *
-*   License, or (at your option) any later version.                           *
-*                                                                             *
-*   TemperatureMeter is distributed in the hope that it will be useful,       *
-*   but WITHOUT ANY WARRANTY; without even the implied warranty of            *
-*   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the             *
-*   GNU General Public License for more details.                              *
-*                                                                             *
-*   You should have received a copy of the GNU General Public License along   *
-*   with TemperatureMeter If not, see <http://www.gnu.org/licenses/>.         *
-*                                                                             *
-*   Copyright (C) 2017 by tommyy94                                            *
-*                                                                             *
-******************************************************************************/
-
-/******************************************************************************
 *
 * 1. NAME
 *       lcd.h
@@ -58,6 +37,7 @@
 
 #define ROWS 2
 #define COLUMNS 16
+#define DECIMAL_SYSTEM 10
 
 #define CLEAR_DISPLAY 0x01
 #define SET_4_BIT 0x28
@@ -68,33 +48,20 @@
 #define FIRST_LINE 0x80
 #define SECOND_LINE 0xC0
 
-<<<<<<< HEAD
 #ifndef NOP
 #define NOP asm volatile("nop")
 #endif
-=======
-#define NOP asm volatile("nop")
->>>>>>> master
 
 /* Global variables */
 
 /* Global structures */
 
-<<<<<<< HEAD
 /******************************************************************************
 *   FUNCTION PROTOTYPES                                                       *
 ******************************************************************************/
 void lcd_send_character(const char character);
 void lcd_send_string(const uint8_t x, const uint8_t y, char *string);
-void lcd_send_int(const uint8_t x, const uint8_t y, int8_t *int_to_display);
-=======
-/****************************************************************************
-*   FUNCTION PROTOTYPES
-****************************************************************************/
-void lcd_send_character(char character);
-void lcd_send_string(uint8_t x, uint8_t y, char *string);
-void lcd_send_int(uint8_t x, uint8_t y, uint32_t int_to_display);
->>>>>>> master
+void lcd_send_int(const uint8_t x, const uint8_t y, int32_t *int_to_display);
 void lcd_init(void);
 
 #endif /* LCD_H_ */
