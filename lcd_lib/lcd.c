@@ -22,8 +22,8 @@
 ******************************************************************************/
 static void lcd_execute_instruction(void);
 static void lcd_wait_if_busy(void);
-static void lcd_send_command(const uint8_t command);
-static void lcd_goto(const uint8_t x, const uint8_t y);
+static void lcd_send_command(uint8_t const command);
+static void lcd_goto(uint8_t const x, uint8_t const y);
 
 /******************************************************************************
 *   FUNCTION: lcd_execute_instruction                                         *
@@ -51,7 +51,7 @@ static void lcd_wait_if_busy(void)
     DATA_DIRECTION &= ~0xFF;
     CONTROL_LINES &= ~(1 << RS); /* command mode */
     CONTROL_LINES |= 1 << RW; /* read mode */
-    while (DATA_LINES >= FIRST_LINE) {
+    while (DATA_LINES >= FIRST_LINE_ADDRESS) {
         lcd_execute_instruction();
     }
     DATA_DIRECTION |= 0xFF;
@@ -65,7 +65,7 @@ static void lcd_wait_if_busy(void)
 instruction and clears used port.
 @param Hexadecimal command to send
 ******************************************************************************/
-static void lcd_send_command(const uint8_t command)
+static void lcd_send_command(uint8_t const command)
 {
     lcd_wait_if_busy();
     DATA_LINES |= command;
@@ -81,10 +81,16 @@ static void lcd_send_command(const uint8_t command)
 @details Cursor is moved relative to first line.
 @param X & Y -coordinates
 ******************************************************************************/
-static void lcd_goto(const uint8_t x, const uint8_t y)
+static void lcd_goto(uint8_t const x, uint8_t const y)
 {
-    static const uint8_t first_column_position[ROWS] = {0, 64};
-    lcd_send_command(FIRST_LINE + x + first_column_position[y]);
+    uint8_t const first_column_position[ROWS] = {
+        FIRST_ROW_POSITION,
+        SECOND_ROW_POSITION,
+        THIRD_ROW_POSITION,
+        FOURTH_ROW_POSITION
+    };
+    
+    lcd_send_command(FIRST_LINE_ADDRESS + x + first_column_position[y]);
 }
 
 /******************************************************************************
@@ -93,7 +99,7 @@ static void lcd_goto(const uint8_t x, const uint8_t y)
 @brief Sends a character when LCD is available.
 @param Character to send
 ******************************************************************************/
-void lcd_send_character(const char character)
+void lcd_send_character(char const character)
 {
     lcd_wait_if_busy();
     DATA_LINES |= character; /* character sent through 4/8-bit data lines */
@@ -111,10 +117,11 @@ void lcd_send_character(const char character)
 time.
 @param X & Y -coordinates, String to send
 ******************************************************************************/
-void lcd_send_string(const uint8_t x, const uint8_t y, char *string)
+void lcd_send_string(uint8_t const x, uint8_t const y,
+                     char const *string)
 {
-    lcd_goto(x, y);
-    while(*string > 0) {
+    lcd_goto(x, y); 
+    while(*string != '\0') {
         lcd_send_character(*string++);
     }
 }
@@ -128,7 +135,8 @@ can be sent to the LCD. String is sent one character at time.
 time.
 @param X & Y -coordinates, Integer to display
 ******************************************************************************/
-void lcd_send_int(const uint8_t x, const uint8_t y, int32_t *int_to_display)
+void lcd_send_int(uint8_t const x, uint8_t const y,
+                  int32_t *const int_to_display)
 {
     char string_to_display[COLUMNS];
     itoa(*int_to_display, string_to_display, DECIMAL_SYSTEM);
