@@ -43,7 +43,7 @@ struct sensor {
 /******************************************************************************
 *   FUNCTION PROTOTYPES                                                       *
 ******************************************************************************/
-void sensor_init(const uint8_t analog_channel);
+void sensor_init(uint8_t const analog_channel);
 void sensor_read(struct sensor *temperature);
 
 #endif /* SENSOR_H_ */
