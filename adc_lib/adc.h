@@ -31,6 +31,6 @@
 *   FUNCTION PROTOTYPES                                                       *
 ******************************************************************************/
 void adc_init(void);
-int32_t adc_read(const uint8_t analog_channel);
+int32_t adc_read(uint8_t const analog_channel);
 
 #endif /* ADC_H_ */
