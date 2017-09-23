@@ -4,7 +4,7 @@
 *       adc.c
 *
 * 2. DESCRIPTION
-*
+*       Converts analog signal to digital.
 *
 ******************************************************************************/
 
@@ -47,7 +47,7 @@ be called.
 @param Analog input pin
 @return 10-bit ADC value
 ******************************************************************************/
-int32_t adc_read(const uint8_t analog_channel)
+int32_t adc_read(uint8_t const analog_channel)
 {
     ADMUX |= analog_channel;
     ADCSRA |= (1 << ADSC); /* starts ADC conversion */
