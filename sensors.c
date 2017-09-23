@@ -16,15 +16,35 @@
 /******************************************************************************
 *   FUNCTION PROTOTYPES                                                       *
 ******************************************************************************/
-static int32_t calculate_average(const uint8_t analog_channel);
+static void calculate_average(uint8_t const analog_channel,
+                              int32_t *const average);
+
+/******************************************************************************
+*   FUNCTION: calculate_average                                               *
+***************************************************************************//**
+@brief Calculates average temperature and saves it to given memory address.
+@param Analog channel to use, pointer to average temperature
+******************************************************************************/
+static void calculate_average(uint8_t const analog_channel,
+                              int32_t *const average)
+{
+    uint8_t i;
+    *average = 0;
+    
+    for(i = 0; i < SAMPLES; i++) {
+        *average += adc_read(analog_channel);
+        _delay_ms(10);
+    }
+    *average /= SAMPLES;
+}
 
 /******************************************************************************
 *   FUNCTION: sensor_init                                                     *
 ***************************************************************************//**
-@brief
-@param
+@brief Discard first 100 readings, since they are unreliable.
+@param Analog channel to use
 ******************************************************************************/
-void sensor_init(const uint8_t analog_channel)
+void sensor_init(uint8_t const analog_channel)
 {
     uint8_t i;
     
@@ -35,29 +55,6 @@ void sensor_init(const uint8_t analog_channel)
 }
 
 /******************************************************************************
-*   FUNCTION: calculate_average                                               *
-***************************************************************************//**
-@brief
-@param
-******************************************************************************/
-static int32_t calculate_average(const uint8_t analog_channel)
-{
-    int32_t average = 0;
-    uint8_t i;
-    /* uint8_t *ptr_average = &average; */
-    /*
-     * @TODO: return pointer to "average"
-     */
-    
-    for(i = 0; i < SAMPLES; i++) {
-        average += adc_read(analog_channel);
-        _delay_ms(10);
-    }
-    average /= SAMPLES;
-    return average;
-}
-
-/******************************************************************************
 *   FUNCTION: sensor_read                                                     *
 ***************************************************************************//**
 @brief Read adc values and compute corresponding temperature values.
@@ -65,10 +62,13 @@ static int32_t calculate_average(const uint8_t analog_channel)
 ******************************************************************************/
 void sensor_read(struct sensor *temperature)
 {
-    const char decimal_mark[] = ".";
-    int32_t celsius, fahrenheit;
+    char const decimal_mark[] = ".";
+    int32_t celsius, fahrenheit, average;
+    int32_t *const ptr_average = &average;
     
-    celsius = ((calculate_average(PINC0) * 5000) / 1024) - 500;
+    calculate_average(PINC0, ptr_average);
+    
+    celsius = ((*ptr_average * 5000) / 1024) - 500;
     itoa(celsius, temperature->celsius, DECIMAL_SYSTEM);
     /* move last digit to right by one and place decimal mark in empty place */
     *(temperature->celsius+3) = *(temperature->celsius+2);
