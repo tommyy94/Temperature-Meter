@@ -32,6 +32,9 @@
 #define MAX_STRING_LENGTH 5
 #define SAMPLES 100
 
+#define CELSIUS_FORMULA(average) (((average) * 5000 / 1024) - 500)
+#define FAHRENHEIT_FORMULA(celsius) (((celsius) * 9 / 5) + 320)
+
 /* Global variables */
 
 /* Global structures */
