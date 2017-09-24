@@ -24,6 +24,7 @@ int main(void)
     char *const ptr_fahrenheit = temperature.fahrenheit;
     
     adc_init();
+    sensor_init(PINC0);
     lcd_init();
     
     lcd_send_string(0, 0, "Celsius");
