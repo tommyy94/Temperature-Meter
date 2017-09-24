@@ -43,11 +43,11 @@ void adc_init(void)
 ***************************************************************************//**
 @brief Starts ADC, waits until it's done, then turns pin ADSC LOW.
 @details Conversion is done in single conversion mode; each conversion has to
-be called. 
+be called.
 @param Analog input pin
 @return 10-bit ADC value
 ******************************************************************************/
-int32_t adc_read(uint8_t const analog_channel)
+uint16_t adc_read(uint8_t const analog_channel)
 {
     ADMUX |= analog_channel;
     ADCSRA |= (1 << ADSC); /* starts ADC conversion */
