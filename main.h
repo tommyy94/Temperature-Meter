@@ -29,8 +29,18 @@
 /* Control flags */
 
 /* Global constants */
-#define DELAY 100
-#define DIGIT_POSITION 11
+#define DELAY 10
+#define DIGIT_POSITION 12
+
+#define FIRST_ROW 0
+#define SECOND_ROW 1
+#define THIRD_ROW 2
+#define FOURTH_ROW 3
+
+#define FIRST_COLUMN 0
+#define SECOND_COLUMN 1
+#define THIRD_COLUMN 2
+#define FOURTH_COLUMN 3
 
 /* Global variables */
 
