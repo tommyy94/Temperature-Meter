@@ -83,13 +83,13 @@ static void lcd_send_command(uint8_t const command)
 ******************************************************************************/
 static void lcd_goto(uint8_t const x, uint8_t const y)
 {
-    uint8_t const first_column_position[ROWS] = {
+    static uint8_t const first_column_position[ROWS] = {
         FIRST_ROW_POSITION,
         SECOND_ROW_POSITION,
         THIRD_ROW_POSITION,
         FOURTH_ROW_POSITION
     };
-    
+
     lcd_send_command(FIRST_LINE_ADDRESS + x + first_column_position[y]);
 }
 
@@ -120,7 +120,7 @@ time.
 void lcd_send_string(uint8_t const x, uint8_t const y,
                      char const *string)
 {
-    lcd_goto(x, y); 
+    lcd_goto(x, y);
     while(*string != '\0') {
         lcd_send_character(*string++);
     }
@@ -139,6 +139,7 @@ void lcd_send_int(uint8_t const x, uint8_t const y,
                   int32_t *const int_to_display)
 {
     char string_to_display[COLUMNS];
+
     itoa(*int_to_display, string_to_display, DECIMAL_SYSTEM);
     lcd_send_string(x, y, string_to_display);
 }
@@ -151,11 +152,11 @@ void lcd_send_int(uint8_t const x, uint8_t const y,
 void lcd_init(void)
 {
     CONTROL_DIRECTION |= 1 << EN | 1 << RW | 1 << RS; /* set control lines  */
-    _delay_ms(15);
+    _delay_ms(LCD_DELAY_AFTER_VDD);
     lcd_send_command(CLEAR_DISPLAY);
-    _delay_ms(2);
+    _delay_ms(LCD_DELAY_MS);
     lcd_send_command(SET_8_BIT); /* using 8 data lines */
-    _delay_us(40);
+    _delay_us(LCD_DELAY_US);
     lcd_send_command(DISPLAY_ON_CURSOR_OFF);
-    _delay_us(40);
+    _delay_us(LCD_DELAY_US);
 }
