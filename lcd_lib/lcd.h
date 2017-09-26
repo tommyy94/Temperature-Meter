@@ -56,6 +56,10 @@
 #define THIRD_LINE_ADDRESS 0x94
 #define FOURTH_LINE_ADDRESS 0xD4
 
+#define LCD_DELAY_AFTER_VDD 15
+#define LCD_DELAY_MS 2
+#define LCD_DELAY_US 40
+
 #ifndef NOP
 #define NOP asm volatile("nop")
 #endif
