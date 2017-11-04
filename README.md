@@ -1,3 +1,12 @@
-# Temperature meter
+# Description
+Measures temperature and displays it on a LCD screen.
 
-Measures temperature and sends the data to server/database. The temperature is displayed on a LCD.
+# Documentation
+https://tommyy94.github.io/temp_meter_docs/index.html
+
+# Hardware/software
+* ATmega328p
+* Atmel-ICE Debugger
+* avr-gcc compiler
+* TMP36 Temperature Sensor
+* LCD screen
