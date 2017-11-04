@@ -13,18 +13,22 @@
 ******************************************************************************/
 #include "sensors.h"
 
-/******************************************************************************
-*   FUNCTION PROTOTYPES                                                       *
-******************************************************************************/
+/*******************************************************************************
+*   FUNCTION PROTOTYPES                                                        *
+*****************************************************************************///
+
+/***************************************************************************//**
+@brief Calculates average temperature and saves it to given memory address.
+@param Analog channel to use, pointer to average temperature
+@return void
+*******************************************************************************/
 static void calculate_average(uint8_t const analog_channel,
                               int32_t *const average);
 
-/******************************************************************************
-*   FUNCTION: calculate_average                                               *
-***************************************************************************//**
-@brief Calculates average temperature and saves it to given memory address.
-@param Analog channel to use, pointer to average temperature
-******************************************************************************/
+
+/*******************************************************************************
+*   FUNCTION DEFINITIONS                                                       *
+*******************************************************************************/
 static void calculate_average(uint8_t const analog_channel,
                               int32_t *const average)
 {
@@ -38,12 +42,7 @@ static void calculate_average(uint8_t const analog_channel,
     *average /= SAMPLES;
 }
 
-/******************************************************************************
-*   FUNCTION: sensor_init                                                     *
-***************************************************************************//**
-@brief Discard first 100 readings, since they are unreliable.
-@param Analog channel to use
-******************************************************************************/
+
 void sensor_init(uint8_t const analog_channel)
 {
     uint16_t i;
@@ -54,12 +53,7 @@ void sensor_init(uint8_t const analog_channel)
     }
 }
 
-/******************************************************************************
-*   FUNCTION: sensor_read                                                     *
-***************************************************************************//**
-@brief Read adc values and compute corresponding temperature values.
-@param Pointer to struct sensor
-******************************************************************************/
+
 void sensor_read(struct sensor *temperature,
                  uint8_t const analog_channel)
 {
@@ -74,12 +68,7 @@ void sensor_read(struct sensor *temperature,
     itoa(fahrenheit, temperature->fahrenheit, DECIMAL_SYSTEM);
 }
 
-/******************************************************************************
-*   FUNCTION: shift_digit                                                     *
-***************************************************************************//**
-@brief Shift digit to right.
-@param Pointer to first character of the string.
-******************************************************************************/
+
 void shift_digit(char *const digit)
 {
     char const decimal_mark[] = ".";

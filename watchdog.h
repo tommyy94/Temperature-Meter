@@ -1,46 +1,49 @@
 /*******************************************************************************
 *
 * 1. NAME
-*       adc.h
+*       watchdog.h
 *
 * 2. DESCRIPTION
 *
 *
 *******************************************************************************/
-#ifndef ADC_H_
-#define ADC_H_
+#ifndef WATCHDOG_H_
+#define WATCHDOG_H_
 
 /*******************************************************************************
 *   HEADER FILES                                                               *
 *******************************************************************************/
-#include <avr/io.h>
+#include <avr/wdt.h>
+#include <avr/interrupt.h>
 #include <stdint.h>
 
 /*******************************************************************************
 *   GLOBAL VARIABLES                                                           *
 *******************************************************************************/
+#define SYS_RESET_PIN PINB4
+
+volatile uint8_t wdt_counter;
 
 /*******************************************************************************
 *   FUNCTION PROTOTYPES                                                        *
 *****************************************************************************///
 
 /***************************************************************************//**
-@brief Sets ADC register values.
-@details Sets reference voltage and input clock to the ADC.
+@brief
+@details
 @param void
 @return void
 *******************************************************************************/
-void adc_init(void);
+void get_mcusr(void)__attribute__((naked))__attribute__((section(".init3")));
 
 
 /***************************************************************************//**
-@brief Starts ADC, waits until it's done, then turns pin ADSC LOW.
-@details Conversion is done in single conversion mode; each conversion has to
-be called.
-@param Analog input pin
-@return 10-bit ADC value
+@brief Initializes the watchdog  timer.
+@details
+@param void
+@return void
 *******************************************************************************/
-uint16_t adc_read(uint8_t const analog_channel);
+void wdt_init(void);
 
 
-#endif /* ADC_H_ */
+#endif /* WATCHDOG_H_ */
