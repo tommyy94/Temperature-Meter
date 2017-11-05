@@ -24,8 +24,19 @@
 void wdt_init(void)
 {
     cli();
+    wdt_reset();
+    /* start timed sequence */
     WDTCSR = (1 << WDCE) | (1 << WDE);
-    WDTCSR = (1 << WDCE) | (1 << WDIE) | (1 << WDP3) | (1 << WDP0);
+    /* Set prescaler (timeout) value = 128K cycles (1.0s) */
+    WDTCSR = (1 << WDP2) | (1 << WDP1);
+    //WDTCSR = (1 << WDIE) | (1 << WDP2) | (1 << WDP1);
+    
+    DDRB &= ~(1 << SYS_RESET_PIN);
+    PORTB |= (1 << SYS_RESET_PIN);
+    
+    PCICR |= (1 << PCIE0);
+    PCMSK0 |= (PCINT4);
+    
     sei();
     wdt_counter = 0;
 }
@@ -41,25 +52,24 @@ void get_mcusr(void)
 ISR(WDT_vect)
 {
     wdt_counter++;
-    if(wdt_counter < 60) {
-        wdt_reset(); /* restart timer if under 60s */
+    if(wdt_counter < 1) {
+        wdt_reset();
     } else {
         /* immediate reset */
         wdt_counter = 0;
-        wdt_reset();
-        WDTCSR |= (1 << WDCE) | (1 << WDE);	/* Enable the WD Change Bit */
-        WDTCSR |= (1 << WDE) | (1 << WDP0);	/* set reset flag WDE & 16ms WDP0 */
+        WDTCSR = (1 << WDCE) | (1 << WDE);	/* Enable the WD Change Bit */
+        WDTCSR = (1 << WDE) | (1 << WDP2) | (1 << WDP1);
     }
 }
 
-/*
+
 ISR(PCINT0_vect)
 {
-    if(!(PINB & (1 << SYS_RESET_PIN))) {
-
-    } else if(PINB & (1 << SYS_RESET_PIN)) {
-        wdt_reset();
+    if(!(PINB & (1 << SYS_RESET_PIN))) { /* if PINB4 is pressed */
+        MCUSR = 0;
+        wdt_disable();
+        system_reset();
     } else {
+        wdt_reset();
     }
 }
-*/
