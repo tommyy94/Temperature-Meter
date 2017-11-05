@@ -22,7 +22,18 @@
 *******************************************************************************/
 #define SYS_RESET_PIN PINB4
 
-volatile uint8_t wdt_counter;
+volatile uint8_t wdt_counter; /* used for interrupt */
+
+/*******************************************************************************
+*   MACROS                                                                     *
+*****************************************************************************///
+/* resets the system by letting watchdog timer run out */
+#define system_reset() {    \
+    do {                    \
+        for(;;) {}          \
+    } while(0);             \
+}
+
 
 /*******************************************************************************
 *   FUNCTION PROTOTYPES                                                        *
