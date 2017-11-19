@@ -4,14 +4,14 @@
 *       lcd.h
 *
 * 2. DESCRIPTION
-*
+*       Library for JHD 659 M10 LCD display.
 *
 *******************************************************************************/
 #ifndef LCD_H_
 #define LCD_H_
 
 #ifndef F_CPU
-#define F_CPU 1000000UL
+#define F_CPU 8000000UL
 #endif
 
 /*******************************************************************************
@@ -20,7 +20,7 @@
 #include <avr/io.h>
 #include <util/delay.h>
 #include <stdlib.h>
-
+  
 /*******************************************************************************
 *   GLOBAL VARIABLES                                                           *
 *******************************************************************************/
@@ -40,7 +40,9 @@
 #define THIRD_ROW_POSITION 32
 #define FOURTH_ROW_POSITION 128
 
-#define DECIMAL_SYSTEM 10 /* for itoa */
+#ifndef DECIMAL_SYSTEM
+#define DECIMAL_SYSTEM 10 /* for converting integer to ascii */
+#endif
 
 /* LCD commands */
 #define CLEAR_DISPLAY 0x01
@@ -56,10 +58,15 @@
 #define THIRD_LINE_ADDRESS 0x94
 #define FOURTH_LINE_ADDRESS 0xD4
 
-#define LCD_DELAY_AFTER_VDD 15 /* delay after power on */
-#define LCD_DELAY_MS 2 /* defined in the LCD manual */
-#define LCD_DELAY_US 40 /* defined in the LCD manual */
+/* delays; refer to the manual */
+#define LCD_DELAY_US_AFTER_VDD 470 /* => 15ms*250kHz/F_CPU=0.46875ms */
+#define LCD_DELAY_US_LONG 52 /* => 1.64ms*250kHz/F_CPU=0.05125ms */
+#define LCD_DELAY_US_SHORT 15 /* => 40us*250kHz/F_CPU=1.25us; 15us to be safe */
 
+
+/*******************************************************************************
+*   MACROS                                                                     *
+*****************************************************************************///
 #ifndef NOP
 #define NOP asm volatile("nop") /* no operation for 1 clock cycle */
 #endif
@@ -67,13 +74,6 @@
 /*******************************************************************************
 *   FUNCTION PROTOTYPES                                                        *
 *****************************************************************************///
-
-/***************************************************************************//**
-@brief Sends a character when LCD is available.
-@param Character to send
-@return void
-*******************************************************************************/
-void lcd_send_character(char const character);
 
 
 /***************************************************************************//**

@@ -22,17 +22,9 @@
 *******************************************************************************/
 #define SYS_RESET_PIN PINB4
 
-volatile uint8_t wdt_counter; /* used for interrupt */
-
 /*******************************************************************************
 *   MACROS                                                                     *
 *****************************************************************************///
-/* resets the system by letting watchdog timer run out */
-#define system_reset() {    \
-    do {                    \
-        for(;;) {}          \
-    } while(0);             \
-}
 
 
 /*******************************************************************************
@@ -40,17 +32,17 @@ volatile uint8_t wdt_counter; /* used for interrupt */
 *****************************************************************************///
 
 /***************************************************************************//**
-@brief
+@brief Resets the system.
 @details
 @param void
 @return void
 *******************************************************************************/
-void get_mcusr(void)__attribute__((naked))__attribute__((section(".init3")));
+void reset_system(void)__attribute__((naked))__attribute__((section(".init3")));
 
 
 /***************************************************************************//**
-@brief Initializes the watchdog  timer.
-@details
+@brief Initializes the watchdog  timer and system reset interrupt.
+@details Interrupts are disabled during timed sequence.
 @param void
 @return void
 *******************************************************************************/

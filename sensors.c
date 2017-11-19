@@ -37,7 +37,7 @@ static void calculate_average(uint8_t const analog_channel,
 
     for(i = 0; i < SAMPLES; i++) {
         *average += adc_read(analog_channel);
-        _delay_us(DELAY);
+        _delay_us(READ_DELAY);
     }
     *average /= SAMPLES;
 }
@@ -49,7 +49,7 @@ void sensor_init(uint8_t const analog_channel)
 
     for(i = 0; i < SAMPLES; i++) {
         adc_read(analog_channel);
-        _delay_us(DELAY);
+        _delay_us(READ_DELAY);
     }
 }
 
@@ -57,22 +57,26 @@ void sensor_init(uint8_t const analog_channel)
 void sensor_read(struct sensor *temperature,
                  uint8_t const analog_channel)
 {
-    int32_t celsius, fahrenheit, average;
+    int32_t celsius, fahrenheit, kelvin, average;
     int32_t *const ptr_average = &average;
 
     calculate_average(analog_channel, ptr_average);
 
     celsius = CELSIUS_FORMULA(*ptr_average);
     fahrenheit = FAHRENHEIT_FORMULA(celsius);
+    kelvin = KELVIN_FORMULA(celsius);
+    
     itoa(celsius, temperature->celsius, DECIMAL_SYSTEM);
     itoa(fahrenheit, temperature->fahrenheit, DECIMAL_SYSTEM);
+    itoa(kelvin, temperature->kelvin, DECIMAL_SYSTEM);
 }
 
 
-void shift_digit(char *const digit)
+void shift_digit(char *const digit_pos,
+                 uint8_t cur_pos, uint8_t new_pos)
 {
     char const decimal_mark[] = ".";
 
-    *(digit + DIGIT_NEW_POS) = *(digit + DIGIT_CURRENT_POS);
-    *(digit + DIGIT_CURRENT_POS) = *decimal_mark;
+    digit_pos[new_pos] = digit_pos[cur_pos];
+    digit_pos[cur_pos] = *decimal_mark;
 }

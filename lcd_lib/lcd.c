@@ -41,6 +41,14 @@ static void lcd_wait_if_busy(void);
 
 
 /***************************************************************************//**
+@brief Sends a character when LCD is available.
+@param Character to send
+@return void
+*******************************************************************************/
+static void lcd_send_character(char const character);
+
+
+/***************************************************************************//**
 @brief Sends a hexadecimal command to LCD.
 @details Given command is set to port.
 Sets write and command mode, executes instruction and clears used port.
@@ -80,6 +88,7 @@ static void lcd_wait_if_busy(void)
         lcd_execute_instruction();
     }
     DATA_DIRECTION |= 0xFF;
+    _delay_us(LCD_DELAY_US_LONG);
 }
 
 
@@ -103,10 +112,11 @@ static void lcd_goto(uint8_t const x, uint8_t const y)
     };
 
     lcd_send_command(FIRST_LINE_ADDRESS + x + first_column_position[y]);
+    _delay_us(LCD_DELAY_US_LONG);
 }
 
 
-void lcd_send_character(char const character)
+static void lcd_send_character(char const character)
 {
     lcd_wait_if_busy();
     DATA_LINES |= character; /* character sent through 4/8-bit data lines */
@@ -114,6 +124,7 @@ void lcd_send_character(char const character)
     CONTROL_LINES |= 1 << RS; /* text mode */
     lcd_execute_instruction();
     DATA_LINES &= ~0xFF; /* clear data lines */
+    _delay_us(LCD_DELAY_US_SHORT);
 }
 
 
@@ -140,11 +151,11 @@ void lcd_send_int(uint8_t const x, uint8_t const y,
 void lcd_init(void)
 {
     CONTROL_DIRECTION |= 1 << EN | 1 << RW | 1 << RS; /* set control lines  */
-    _delay_ms(LCD_DELAY_AFTER_VDD);
-    lcd_send_command(CLEAR_DISPLAY);
-    _delay_ms(LCD_DELAY_MS);
+    _delay_us(LCD_DELAY_US_AFTER_VDD);
     lcd_send_command(SET_8_BIT); /* using 8 data lines */
-    _delay_us(LCD_DELAY_US);
+    _delay_us(LCD_DELAY_US_SHORT);
     lcd_send_command(DISPLAY_ON_CURSOR_OFF);
-    _delay_us(LCD_DELAY_US);
+    _delay_us(LCD_DELAY_US_SHORT);
+    lcd_send_command(CLEAR_DISPLAY);
+    _delay_us(LCD_DELAY_US_LONG);
 }

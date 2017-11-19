@@ -32,23 +32,39 @@ void main(void)
     struct sensor *const ptr_temperature = &temperature;
     char *const ptr_celsius = temperature.celsius;
     char *const ptr_fahrenheit = temperature.fahrenheit;
+    char *const ptr_kelvin = temperature.kelvin;
 
-    //get_mcusr();
+    /* set clock division factor to 1 */
+    CLKPR = (1 << CLKPCE);
+    CLKPR &= ~0xFF;
+    
+    /* init sequence */
     adc_init();
     sensor_init(SENSOR_1_PIN);
     lcd_init();
-    //wdt_init();
-
-    lcd_send_string(FIRST_COLUMN, FIRST_ROW, "Celsius");
-    lcd_send_string(FIRST_COLUMN, SECOND_ROW, "Fahrenheit");
-
+    wdt_init();
+    _delay_ms(DELAY);
+    
+    /* initialize lcd screen with text */
+    lcd_send_string(SIXTH_COLUMN, FIRST_ROW, DEGREE_SIGN "C");
+    lcd_send_string(FOURTEENTH_COLUMN, FIRST_ROW, DEGREE_SIGN "F");
+    lcd_send_string(SIXTH_COLUMN, SECOND_ROW, DEGREE_SIGN "K");
+    
     while(1) {
+        /* read sensor values and save to struct */
         sensor_read(ptr_temperature, SENSOR_1_PIN);
-        shift_digit(ptr_celsius);
-        shift_digit(ptr_fahrenheit);
-        lcd_send_string(DIGIT_POSITION, FIRST_ROW, ptr_celsius);
-        lcd_send_string(DIGIT_POSITION, SECOND_ROW, ptr_fahrenheit);
+        
+        /* handle strings */
+        shift_digit(ptr_celsius, 2, 3);
+        shift_digit(ptr_fahrenheit, 2, 3);
+        shift_digit(ptr_kelvin, 3, 4);
+        
+        /* print values */
+        lcd_send_string(SECOND_COLUMN, FIRST_ROW, ptr_celsius);
+        lcd_send_string(TENTH_COLUMN, FIRST_ROW, ptr_fahrenheit);
+        lcd_send_string(FIRST_COLUMN, SECOND_ROW, ptr_kelvin);
+        
         _delay_ms(DELAY);
-        //wdt_reset(); /* restart timer if under 60s */
+        wdt_reset();
     }
 }
