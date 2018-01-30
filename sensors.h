@@ -11,7 +11,7 @@
 #define SENSOR_H_
 
 #ifndef F_CPU
-#define F_CPU 8000000UL
+    #define F_CPU 8000000UL
 #endif
 
 /*******************************************************************************
@@ -20,17 +20,18 @@
 #include <stdint.h>
 #include <stdlib.h>
 #include <util/delay.h>
+#include <avr/io.h>
 
 /*******************************************************************************
 *   GLOBAL VARIABLES                                                           *
 *****************************************************************************///
 #ifndef DECIMAL_SYSTEM
-#define DECIMAL_SYSTEM 10 /* for converting integer to ascii */
+    #define DECIMAL_SYSTEM 10 /* for converting integer to ascii */
 #endif
 
 #define MAX_STRING_LENGTH 5
 #define SAMPLES 1000
-#define READ_DELAY 5
+#define READ_DELAY 5 /* 0x26 = 39 timer ticks */
 
 /* sensor pins */
 #define SENSOR_1_PIN PINC1

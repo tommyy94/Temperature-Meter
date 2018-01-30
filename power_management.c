@@ -1,17 +1,17 @@
 /*******************************************************************************
 *
 * 1. NAME
-*       watchdog.c
+*      power_management.c
 *
 * 2. DESCRIPTION
-*       When switch is pressed, reset the program.
+*
 *
 *******************************************************************************/
 
 /*******************************************************************************
 *   HEADER FILES                                                               *
 *******************************************************************************/
-#include "watchdog.h"
+#include "power_management.h"
 
 /*******************************************************************************
 *   FUNCTION PROTOTYPES                                                        *
@@ -21,29 +21,31 @@
 /*******************************************************************************
 *   FUNCTION DEFINITIONS                                                       *
 *******************************************************************************/
-void wdt_init(void)
+void sleep_ms(uint8_t duration_as_hex)
 {
-    wdt_disable();
+    /**
+     * timer_ticks = CPU frequency / timer prescaler
+     *             = 8 MHz / 1024 clk
+     *             = 7812.5 timer ticks (=> 1000 ms)
+     *
+     * converting to milliseconds:
+     * duration_as_hex = timer_ticks * <time to sleep in milliseconds>
+     * NOTE: 0x00 is one count!
+     */
+    set_sleep_mode(SLEEP_MODE_PWR_SAVE);
 
-    /* start timed sequence */
-    WDTCSR = (1 << WDCE) | (1 << WDE);
-    /* Set prescaler (timeout) value = 64K cycles (0.5s) */
-    WDTCSR = (1 << WDE) | (1 << WDP2) | (1 << WDP0);
+    /* set 8-bit timer registers */
+    TCCR2B |= (1 << WGM22) | (1 << CS22) | (1 << CS21) | (1 << CS20);
+    OCR2A |= duration_as_hex;
+
+    TIMSK2 |= (1 << OCIE2A);
 
     sei();
-
-    DDRB &= ~(1 << SYS_RESET_PIN);
-    PORTB |= (1 << SYS_RESET_PIN);
-
-    /* switch interrupts */
-    PCICR |= (1 << PCIE0);
-    PCMSK0 |= (PCINT4);
+    sleep_mode();
 }
 
 
-ISR(PCINT0_vect)
+ISR(TIMER2_COMPA_vect)
 {
-    if(!(PINB & (1 << SYS_RESET_PIN))) { /* if switch is pressed */
-        soft_reset();
-    }
+    ;
 }

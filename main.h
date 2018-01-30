@@ -11,7 +11,7 @@
 #define MAIN_H_
 
 #ifndef F_CPU
-#define F_CPU 8000000UL
+    #define F_CPU 8000000UL
 #endif
 
 /*******************************************************************************
@@ -20,16 +20,25 @@
 #include <avr/io.h>
 #include <util/delay.h>
 #include <stdint.h>
+#include <avr/interrupt.h>
+#include <avr/sleep.h>
 #include "adc_lib/adc.h"
 #include "sensors.h"
 #include "lcd_lib/lcd.h"
 #include "watchdog.h"
+#include "power_management.h"
+
 
 /*******************************************************************************
 *   GLOBAL VARIABLES                                                           *
 *******************************************************************************/
-#define DELAY 10 /* main loop delay */
+#define DELAY 0x4D /* 10ms, main loop delay */
 #define DEGREE_SIGN "\xB2"
+
+#define BOOT_DEBUG
+#ifdef BOOT_DEBUG
+    uint8_t mcusr_mirror __attribute__((section(".noinit")));
+#endif
 
 /* positions for sending string to LCD */
 #define FIRST_ROW 0
@@ -55,6 +64,7 @@
 #define FIFTEENTH_COLUMN 14
 #define SIXTEENTH_COLUMN 15
 
+
 /*******************************************************************************
 *   MACROS                                                                     *
 *****************************************************************************///
@@ -62,5 +72,19 @@
 /*******************************************************************************
 *   FUNCTION PROTOTYPES                                                        *
 *****************************************************************************///
+
+
+/***************************************************************************//**
+@brief Saves MCUSR status to mirror and clears MCUSR.
+@details Disables the watchdog timer.
+@param void
+@return void
+*******************************************************************************/
+#ifdef BOOT_DEBUG
+    void get_mcusr(void)
+    __attribute__((naked))
+    __attribute__((section(".init3")));
+#endif
+
 
 #endif /* MAIN_H_ */

@@ -1,38 +1,31 @@
 /*******************************************************************************
 *
 * 1. NAME
-*       watchdog.h
+*       power_management.h
 *
 * 2. DESCRIPTION
-*
+*       - ATmega328P
 *
 *******************************************************************************/
-#ifndef WATCHDOG_H_
-#define WATCHDOG_H_
+#ifndef POWER_MANAGEMENT_H_
+#define POWER_MANAGEMENT_H_
 
 /*******************************************************************************
 *   HEADER FILES                                                               *
 *******************************************************************************/
-#include <avr/wdt.h>
-#include <avr/interrupt.h>
+#include <avr/io.h>
 #include <stdint.h>
+#include <avr/interrupt.h>
+#include <avr/sleep.h>
+
 
 /*******************************************************************************
 *   GLOBAL VARIABLES                                                           *
 *******************************************************************************/
-#define SYS_RESET_PIN PINB4
-
 
 /*******************************************************************************
 *   MACROS                                                                     *
 *****************************************************************************///
-#define soft_reset() /* resets the system */    \
-    do {                                        \
-        wdt_enable(WDTO_15MS);                  \
-        while(1) {                              \
-            ; /* wait until timer runs out */   \
-        }                                       \
-    } while(0)
 
 /*******************************************************************************
 *   FUNCTION PROTOTYPES                                                        *
@@ -40,12 +33,13 @@
 
 
 /***************************************************************************//**
-@brief Initializes the watchdog timer and system reset interrupt.
-@details Interrupts are disabled during timed sequence.
-@param void
+@brief Sleeps given duration, MAX 250 ms.
+@details Time to sleep is inserted as hexadecimal, so it can be loaded into
+register instantly without converting during runtime.
+@param Time to sleep in hexadecimal form
 @return void
 *******************************************************************************/
-void wdt_init(void)__attribute__((naked))__attribute__((section(".init3")));
+void sleep_ms(uint8_t duration_as_hex);
 
 
-#endif /* WATCHDOG_H_ */
+#endif /* POWER_MANAGEMENT_H_ */

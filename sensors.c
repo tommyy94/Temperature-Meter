@@ -65,7 +65,7 @@ void sensor_read(struct sensor *temperature,
     celsius = CELSIUS_FORMULA(*ptr_average);
     fahrenheit = FAHRENHEIT_FORMULA(celsius);
     kelvin = KELVIN_FORMULA(celsius);
-    
+
     itoa(celsius, temperature->celsius, DECIMAL_SYSTEM);
     itoa(fahrenheit, temperature->fahrenheit, DECIMAL_SYSTEM);
     itoa(kelvin, temperature->kelvin, DECIMAL_SYSTEM);
