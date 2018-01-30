@@ -5,6 +5,7 @@
 *
 * 2. DESCRIPTION
 *       Library for JHD 659 M10 LCD display.
+*       NOTE: Whole port is used for Control Direction register.
 *
 *******************************************************************************/
 #ifndef LCD_H_
@@ -59,7 +60,7 @@
 #define FOURTH_LINE_ADDRESS 0xD4
 
 /* delays; refer to the manual */
-#define LCD_DELAY_US_AFTER_VDD 470 /* => 15ms*250kHz/F_CPU=0.46875ms */
+#define LCD_DELAY_US_AFTER_VDD 500 /* => 15ms*250kHz/F_CPU=0.46875ms */
 #define LCD_DELAY_US_LONG 52 /* => 1.64ms*250kHz/F_CPU=0.05125ms */
 #define LCD_DELAY_US_SHORT 15 /* => 40us*250kHz/F_CPU=1.25us; 15us to be safe */
 
@@ -98,11 +99,21 @@ void lcd_send_int(uint8_t const x, uint8_t const y,
        
 
 /***************************************************************************//**
+@brief Sends a hexadecimal command to LCD.
+@details Given command is set to port.
+Sets write and command mode, executes instruction and clears used port.
+@param Hexadecimal command to send
+@return void
+*******************************************************************************/
+void lcd_send_command(uint8_t const command);
+
+
+/***************************************************************************//**
 @brief Sets 4/8-bit mode and control lines to desirable port.
 @param void
 @return void
 *******************************************************************************/
-void lcd_init(void);
+void lcd_init(uint8_t mode, uint8_t screen);
 
 
 #endif /* LCD_H_ */

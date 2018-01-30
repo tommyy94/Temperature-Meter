@@ -49,16 +49,6 @@ static void lcd_send_character(char const character);
 
 
 /***************************************************************************//**
-@brief Sends a hexadecimal command to LCD.
-@details Given command is set to port.
-Sets write and command mode, executes instruction and clears used port.
-@param Hexadecimal command to send
-@return void
-*******************************************************************************/
-static void lcd_send_command(uint8_t const command);
-
-
-/***************************************************************************//**
 @brief Moves LCD cursor to given position.
 @details Cursor is moved relative to first line.
 @param X & Y -coordinates
@@ -92,7 +82,7 @@ static void lcd_wait_if_busy(void)
 }
 
 
-static void lcd_send_command(uint8_t const command)
+void lcd_send_command(uint8_t const command)
 {
     lcd_wait_if_busy();
     DATA_LINES |= command;
@@ -148,14 +138,14 @@ void lcd_send_int(uint8_t const x, uint8_t const y,
 }
 
 
-void lcd_init(void)
+void lcd_init(uint8_t mode, uint8_t screen)
 {
     CONTROL_DIRECTION |= 1 << EN | 1 << RW | 1 << RS; /* set control lines  */
     _delay_us(LCD_DELAY_US_AFTER_VDD);
-    lcd_send_command(SET_8_BIT); /* using 8 data lines */
+    lcd_send_command(mode); /* using 8 data lines */
     _delay_us(LCD_DELAY_US_SHORT);
     lcd_send_command(DISPLAY_ON_CURSOR_OFF);
     _delay_us(LCD_DELAY_US_SHORT);
-    lcd_send_command(CLEAR_DISPLAY);
+    lcd_send_command(screen);
     _delay_us(LCD_DELAY_US_LONG);
 }
