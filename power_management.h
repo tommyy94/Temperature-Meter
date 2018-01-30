@@ -1,20 +1,23 @@
 /*******************************************************************************
 *
 * 1. NAME
-*       adc.h
+*       power_management.h
 *
 * 2. DESCRIPTION
-*
+*       - ATmega328P
 *
 *******************************************************************************/
-#ifndef ADC_H_
-#define ADC_H_
+#ifndef POWER_MANAGEMENT_H_
+#define POWER_MANAGEMENT_H_
 
 /*******************************************************************************
 *   HEADER FILES                                                               *
 *******************************************************************************/
 #include <avr/io.h>
 #include <stdint.h>
+#include <avr/interrupt.h>
+#include <avr/sleep.h>
+
 
 /*******************************************************************************
 *   GLOBAL VARIABLES                                                           *
@@ -23,11 +26,6 @@
 /*******************************************************************************
 *   MACROS                                                                     *
 *****************************************************************************///
-#define adc_init() { /* 10-bit conversion, input clock 8MHz/64 = 125kHz */ \
-    ADMUX |= (1 << REFS0);                                                 \
-    ADCSRA |= (1 << ADEN) | (1 << ADPS2) | (1 << ADPS1);                   \
-}
-
 
 /*******************************************************************************
 *   FUNCTION PROTOTYPES                                                        *
@@ -35,13 +33,13 @@
 
 
 /***************************************************************************//**
-@brief Starts ADC, waits until it's done, then turns pin ADSC LOW.
-@details Conversion is done in single conversion mode; each conversion has to
-be called.
-@param Analog input pin
-@return 10-bit ADC value
+@brief Sleeps given duration, MAX 250 ms.
+@details Time to sleep is inserted as hexadecimal, so it can be loaded into
+register instantly without converting during runtime.
+@param Time to sleep in hexadecimal form
+@return void
 *******************************************************************************/
-uint16_t adc_read(uint8_t const analog_channel);
+void sleep_ms(uint8_t duration_as_hex);
 
 
-#endif /* ADC_H_ */
+#endif /* POWER_MANAGEMENT_H_ */

@@ -13,69 +13,70 @@
 ******************************************************************************/
 #include "sensors.h"
 
-/******************************************************************************
-*   FUNCTION PROTOTYPES                                                       *
-******************************************************************************/
+/*******************************************************************************
+*   FUNCTION PROTOTYPES                                                        *
+*****************************************************************************///
+
+/***************************************************************************//**
+@brief Calculates average temperature and saves it to given memory address.
+@param Analog channel to use, pointer to average temperature
+@return void
+*******************************************************************************/
 static void calculate_average(uint8_t const analog_channel,
                               int32_t *const average);
 
-/******************************************************************************
-*   FUNCTION: calculate_average                                               *
-***************************************************************************//**
-@brief Calculates average temperature and saves it to given memory address.
-@param Analog channel to use, pointer to average temperature
-******************************************************************************/
+
+/*******************************************************************************
+*   FUNCTION DEFINITIONS                                                       *
+*******************************************************************************/
 static void calculate_average(uint8_t const analog_channel,
                               int32_t *const average)
 {
-    uint8_t i;
+    uint16_t i;
     *average = 0;
 
     for(i = 0; i < SAMPLES; i++) {
         *average += adc_read(analog_channel);
-        _delay_ms(10);
+        _delay_us(READ_DELAY);
     }
     *average /= SAMPLES;
 }
 
-/******************************************************************************
-*   FUNCTION: sensor_init                                                     *
-***************************************************************************//**
-@brief Discard first 100 readings, since they are unreliable.
-@param Analog channel to use
-******************************************************************************/
+
 void sensor_init(uint8_t const analog_channel)
 {
-    uint8_t i;
+    uint16_t i;
 
     for(i = 0; i < SAMPLES; i++) {
         adc_read(analog_channel);
-        _delay_ms(10);
+        _delay_us(READ_DELAY);
     }
 }
 
-/******************************************************************************
-*   FUNCTION: sensor_read                                                     *
-***************************************************************************//**
-@brief Read adc values and compute corresponding temperature values.
-@param Pointer to struct sensor
-******************************************************************************/
-void sensor_read(struct sensor *temperature)
+
+void sensor_read(struct sensor *temperature,
+                 uint8_t const analog_channel)
 {
-    char const decimal_mark[] = ".";
-    int32_t celsius, fahrenheit, average;
+    int32_t celsius, fahrenheit, kelvin, average;
     int32_t *const ptr_average = &average;
 
-    calculate_average(PINC0, ptr_average);
+    calculate_average(analog_channel, ptr_average);
 
     celsius = CELSIUS_FORMULA(*ptr_average);
     fahrenheit = FAHRENHEIT_FORMULA(celsius);
+    kelvin = KELVIN_FORMULA(celsius);
+
     itoa(celsius, temperature->celsius, DECIMAL_SYSTEM);
     itoa(fahrenheit, temperature->fahrenheit, DECIMAL_SYSTEM);
+    itoa(kelvin, temperature->kelvin, DECIMAL_SYSTEM);
+}
 
-    /* shift a digit and place a decimal mark */
-    *(temperature->celsius+3) = *(temperature->celsius+2);
-    *(temperature->celsius+2) = *decimal_mark;
-    *(temperature->fahrenheit+3) = *(temperature->fahrenheit+2);
-    *(temperature->fahrenheit+2) = *decimal_mark;
+
+void shift_digit(char *const digit_pos,
+                 uint8_t cur_pos, uint8_t new_pos)
+{
+    char const decimal_mark[] = ".";
+
+    digit_pos[new_pos] = digit_pos[cur_pos];
+    digit_pos[cur_pos] = *decimal_mark;
 }
