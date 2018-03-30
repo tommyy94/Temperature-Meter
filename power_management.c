@@ -46,7 +46,7 @@ void sleep_ms(uint8_t duration_as_hex)
     sleep_bod_disable(); /* time enabling brown-out detection is inconsistent */
     sei(); /* interrupt is used to wake up */
     sleep_cpu(); /* actual sleep happens here */
-    sleep_disable(); /* disable sleep to avoid accidental sleep afte wakeup */
+    sleep_disable(); /* disable sleep to avoid accidental sleep after wakeup */
 
     /**
      * NOTE: Sleep duration doesn't include setting up the timer and the
